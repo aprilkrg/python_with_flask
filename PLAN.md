@@ -19,7 +19,7 @@ alembic init migrations
 ```
 Before we can migrate using the `alembic upgrade head` command, we need to set some environment variables.
 
-## Config for alembic: dotenv
+## Config for alembic: `dotenv`
 Install `python-dotenv` package using pip3. This will create a `env.py` file in the `migrations` directory.
 ```bash
 pip3 install python-dotenv
@@ -110,7 +110,7 @@ Which returns,
   Generating /Users/macuser/r-sei/seir-1011/unit-4/python_flask/migrations/version
   s/64d16607c8b6_initial_migration.py ...  done
 ```
-Open the file created at the above path, and we'll add to the `upgrade` and `downgrade` functions, to create and drop the table. We'll fill out the function with the alembic command `create_table`, then call on the sqlalchemy library for the `Column` construct and datatypes. The 
+Open the file created at the above path, and we'll add to the `upgrade` and `downgrade` functions, to create and drop the table. We'll fill out the function with the alembic command `create_table`, then call on the sqlalchemy library for the `Column` construct and datatypes.  
 ```python
 def upgrade():
     op.create_table(
@@ -142,3 +142,24 @@ python_flask=# \d
  public | users           | table    | macuser
  public | users_id_seq    | sequence | macuser
 (3 rows)
+```
+A query of the users table will show the anticipated columns,
+```psql
+python_flask=# SELECT * FROM users;
+ id | email | password | timestamp 
+----+-------+----------+-----------
+(0 rows)
+```
+So, the steps to complete a migration are: 
+<!-- - prepare the migration with `alembic upgrade head` -->
+- create the migration version file with `alembic revisions -m ARGUMENT_TACO`
+- fill out the file that was created from the previous step with any change you want to make to the database
+- migrate the changes with the command `alembic upgrade head`
+
+
+Now we have a way to connect with our database, which we will use to create our CRUD-able RESTful API. We can test our routes and controllers by creating rows in our users table.
+
+
+Plan out our next steps,
+- we'll need an app.py to run
+- we could immediately seperate out the routes and functions into other directories, and import into app.py to test the file connection
